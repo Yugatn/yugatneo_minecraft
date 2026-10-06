@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сюжет Икс — Voxel Prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div>
+    <strong>СЮЖЕТ ИКС</strong>
+    <span>VOXEL PROTOTYPE</span>
+  </div>
+  <div class="stats">
+    <span>Восприятие <b id="perception">50</b></span>
+    <span>Контексты <b id="contexts">0</b></span>
+    <span>Память <b id="memories">0</b></span>
+  </div>
+</header>
+<main>
+  <canvas id="world" aria-label="Игровой мир"></canvas>
+  <aside>
+    <h2>Инвентарь</h2>
+    <div id="inventory"></div>
+    <h2>Контекст</h2>
+    <p id="context">Исследуйте мир и находите фрагменты памяти.</p>
+    <button id="reset">Новая траектория</button>
+  </aside>
+</main>
+<script src="game.js"></script>
+</body>
+</html>
