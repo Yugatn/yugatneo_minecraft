@@ -2,7 +2,7 @@ const canvas=document.getElementById('world'),ctx=canvas.getContext('2d');
 const state=JSON.parse(localStorage.getItem('storyXVoxel')||'null')||{x:10,y:8,perception:50,contexts:0,memories:0,blocks:{wood:8,stone:12,crystal:2},calendarMode:'modern',worldDay:0};
 const keys={}; let dpr=1, tile=42, selected='wood';
 
-const transitionState={active:false,stage:0};
+const transitionState={stage:0};
 const transitionStages=[
  'Известная модель реальности начинает терять устойчивость.',
  'Субъект воспринимает новое как актуальное, а прежнее — как прошлую модель.',
@@ -39,8 +39,7 @@ function calendarText(){
  return mode.name+' · '+mode.format(state.worldDay);
 }
 function triggerTransition(){
- if(transitionState.active)return;
- transitionState.active=true;transitionState.stage=Math.min(transitionStages.length-1,transitionState.stage+1);
+ transitionState.stage=Math.min(transitionStages.length-1,transitionState.stage+1);
  state.perception=Math.max(0,state.perception-8);
  document.getElementById('context').textContent=transitionStages[transitionState.stage];
  document.body.classList.toggle('perception-inversion',transitionState.stage>=1);
