@@ -2,7 +2,17 @@ const canvas=document.getElementById('world'),ctx=canvas.getContext('2d');
 const state=JSON.parse(localStorage.getItem('storyXVoxel')||'null')||{x:10,y:8,perception:50,contexts:0,memories:0,blocks:{wood:8,stone:12,crystal:2},calendarMode:'modern',worldDay:0};
 const keys={}; let dpr=1, tile=42, selected='wood';
 
+const transitionState={active:false,stage:0};
+const transitionStages=[
+ 'Известная модель реальности начинает терять устойчивость.',
+ 'Субъект воспринимает новое как актуальное, а прежнее — как прошлую модель.',
+ 'Самадхи: граница между прежней и новой моделью восприятия.',
+ 'Переход завершён: открыта новая траектория восприятия.'
+];
+
 const memories=[
+ {x:12,y:10,title:'Фрагмент: Инверсия восприятия',text:'В процессе перехода известное теряет актуальность, а новое становится реальным для субъекта.'},
+ {x:18,y:8,title:'Фрагмент: Самадхи',text:'Переходное состояние между прежней и новой моделью восприятия.'},
  {x:4,y:4,title:'Фрагмент: Фройд',text:'Знание приходит к субъекту через язык, перевод и память.'},
  {x:15,y:5,title:'Фрагмент: Господин Никто',text:'Разные версии одной истории способны создавать разные модели реальности.'},
  {x:20,y:12,title:'Фрагмент: Бюро корректировки',text:'Воздействие может менять траекторию, но воздействие не равно намерение.'},
@@ -28,6 +38,14 @@ function calendarText(){
  const mode=calendarModes[state.calendarMode]||calendarModes.modern;
  return mode.name+' · '+mode.format(state.worldDay);
 }
+function triggerTransition(){
+ if(transitionState.active)return;
+ transitionState.active=true;transitionState.stage=Math.min(transitionStages.length-1,transitionState.stage+1);
+ state.perception=Math.max(0,state.perception-8);
+ document.getElementById('context').textContent=transitionStages[transitionState.stage];
+ document.body.classList.toggle('perception-inversion',transitionState.stage>=1);
+ save();
+}
 function save(){localStorage.setItem('storyXVoxel',JSON.stringify(state));renderUI()}
 function renderUI(){
  document.getElementById('perception').textContent=state.perception;
@@ -46,7 +64,7 @@ ctx.strokeStyle='rgba(255,255,255,.35)';ctx.strokeRect(ox+state.x*tile,oy+state.
 function move(dx,dy){
  state.x=Math.max(1,Math.min(26,state.x+dx));state.y=Math.max(1,Math.min(20,state.y+dy));state.worldDay++;
  const m=memories.find(m=>m.x===state.x&&m.y===state.y);
- if(m){state.memories++;state.contexts++;state.perception=Math.min(100,state.perception+7);document.getElementById('context').textContent=m.title+' — '+m.text;memories.splice(memories.indexOf(m),1);if(m.title==='Фрагмент: Календарь')cycleCalendar();}
+ if(m){state.memories++;state.contexts++;state.perception=Math.min(100,state.perception+7);document.getElementById('context').textContent=m.title+' — '+m.text;memories.splice(memories.indexOf(m),1);if(m.title==='Фрагмент: Календарь')cycleCalendar();if(m.title==='Фрагмент: Инверсия восприятия'||m.title==='Фрагмент: Самадхи')triggerTransition();}
  save();draw();
 }
 function cycleCalendar(){
